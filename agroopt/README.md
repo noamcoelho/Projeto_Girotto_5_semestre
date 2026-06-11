@@ -199,14 +199,53 @@ Em produção, altere para a URL do servidor backend deployado.
 
 ---
 
-## ✅ Melhorias Implementadas
+## 👥 Equipe
 
-1. **Correção da função matemática**: Removidos os termos `-x - y` que estavam incorretos
-2. **Ajuste dos coeficientes padrão**: a=3, b=4 (conforme especificação da lauda acadêmica)
-3. **Validação matemática completa**: Resultados conferem com os valores esperados na lauda
-4. **Instalação de dependências**: Backend (Python) e Frontend (Node.js)
-5. **Testes de integração**: API validada com curl, resultados corretos
-6. **Documentação atualizada**: README com instruções completas de uso
+| Nome | Curso |
+|------|-------|
+| Noam Coelho | Ciência da Computação |
+| João Pedro Silva | Ciência da Computação |
+| Rodrigo Marques | Ciência da Computação |
+
+**Instituição:** Centro Universitário do Pará  
+**Disciplina:** Resolução de Problemas Multivariáveis  
+**Professor:** Pedro Girotto
+
+---
+
+## 🤖 Declaração de Uso de Inteligência Artificial
+
+Este projeto utilizou ferramentas de IA generativa como apoio ao desenvolvimento, declarado de forma consciente e transparente conforme exigido pelas normas acadêmicas:
+
+- **Claude (Anthropic):** Utilizado para geração e revisão de trechos de código Python (backend FastAPI + SymPy) e JavaScript/React (componentes do frontend), sugestões de estrutura do relatório e depuração de erros lógicos.
+- **Toda a modelagem matemática** (derivadas parciais, gradiente, Hessiana, classificação do ponto crítico) foi desenvolvida e verificada pelos membros da equipe com base nos conteúdos da disciplina.
+- O código gerado com auxílio de IA foi **revisado, compreendido e testado** pelos autores antes de sua incorporação ao projeto.
+
+---
+
+## 📄 Licença
+
+Este projeto é distribuído sob a licença **MIT**.
+
+```
+MIT License
+
+Copyright (c) 2026 Noam Coelho, João Pedro Silva, Rodrigo Marques
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+```
 
 ---
 

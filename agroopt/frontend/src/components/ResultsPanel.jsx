@@ -22,7 +22,8 @@ export default function ResultsPanel({ result }) {
     x_otimo, y_otimo, lucro_maximo, classificacao,
     gradiente, hessiana, det_hessiana, trace_hessiana,
     funcao_latex, grad_x_latex, grad_y_latex,
-    sistema_solucao, explicacao, interpretacao_economica
+    sistema_solucao, explicacao, interpretacao_economica,
+    sensibilidade
   } = result
 
   return (
@@ -56,6 +57,38 @@ export default function ResultsPanel({ result }) {
         </div>
       </div>
 
+      {/* ── Análise de Sensibilidade ── */}
+      {sensibilidade && Object.keys(sensibilidade).length > 0 && (
+        <div className="card">
+          <div className="card-title">📈 Análise de Sensibilidade</div>
+          <p style={{ fontSize: '.9rem', color: 'var(--gray-700)', marginBottom: '1rem', lineHeight: 1.7 }}>
+            Impacto de uma variação de <strong>+1%</strong> em cada parâmetro sobre o ponto ótimo.
+            Parâmetros com maior impacto no lucro indicam onde concentrar esforços de gestão.
+          </p>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '.88rem' }}>
+            <thead>
+              <tr style={{ background: 'var(--green-50)' }}>
+                {['Parâmetro (+1%)', 'Δ x* (Irrigação)', 'Δ y* (Fertilizantes)', 'Δ L* (Lucro)'].map(h => (
+                  <th key={h} style={{ padding: '.6rem 1rem', textAlign: h === 'Parâmetro (+1%)' ? 'left' : 'center', border: '1px solid var(--gray-200)', color: 'var(--green-800)', fontWeight: 700 }}>{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {Object.entries(sensibilidade).map(([param, vals]) => (
+                <tr key={param} style={{ background: 'white' }}>
+                  <td style={{ padding: '.5rem 1rem', border: '1px solid var(--gray-200)', fontWeight: 700, color: 'var(--green-700)', fontFamily: 'monospace' }}>{param} + 1%</td>
+                  {[vals.variacao_x, vals.variacao_y, vals.variacao_lucro].map((v, i) => (
+                    <td key={i} style={{ padding: '.5rem 1rem', border: '1px solid var(--gray-200)', textAlign: 'center', fontWeight: 600, color: v > 0 ? 'var(--green-700)' : v < 0 ? 'var(--red-500)' : 'var(--gray-400)' }}>
+                      {v > 0 ? '+' : ''}{v}%
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
       {/* ── Seção matemática ── */}
       <div className="card">
         <div className="card-title">
@@ -77,7 +110,7 @@ export default function ResultsPanel({ result }) {
             {/* 1. Função */}
             <div className="math-label">1. Função de Lucro L(x, y)</div>
             <div className="formula-box">
-              L(x,y) = ax + by − cx² − dy² + exy − x − y
+              L(x,y) = ax + by − cx² − dy² + exy
             </div>
             <div className="math-block">{funcao_latex}</div>
 

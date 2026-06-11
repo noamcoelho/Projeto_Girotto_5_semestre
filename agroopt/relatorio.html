@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Relatório AgroOpt — Otimização de Investimentos Agrícolas</title>
+  <style>
+    /* ── Configuração de página para impressão ── */
+    @page {
+      size: A4;
+      margin: 2.5cm 2.2cm 2.5cm 2.5cm;
+    }
+
+    @media print {
+      .page-break { page-break-before: always; }
+      .no-print { display: none; }
+      body { font-size: 11pt; }
+    }
+
+    /* ── Reset e base ── */
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 12pt;
+      line-height: 1.65;
+      color: #1a1a1a;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* ── Capa ── */
+    .cover {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 3cm 1.5cm;
+      text-align: center;
+      border-bottom: 3px solid #166534;
+    }
+
+    .cover-institution {
+      font-size: 13pt;
+      color: #374151;
+      line-height: 1.8;
+    }
+
+    .cover-title-block {
+      margin: 2cm 0;
+    }
+
+    .cover-title {
+      font-size: 26pt;
+      font-weight: bold;
+      color: #166534;
+      margin-bottom: .4cm;
+    }
+
+    .cover-subtitle {
+      font-size: 14pt;
+      color: #374151;
+      font-style: italic;
+    }
+
+    .cover-team {
+      font-size: 12pt;
+      color: #374151;
+      line-height: 2;
+    }
+
+    .cover-team strong {
+      display: block;
+      font-size: 13pt;
+      color: #166534;
+      margin-bottom: .3cm;
+    }
+
+    /* ── Tipografia ── */
+    h2 {
+      font-size: 14pt;
+      font-weight: bold;
+      color: #166534;
+      border-bottom: 2px solid #166534;
+      padding-bottom: .25em;
+      margin-top: 1.8em;
+      margin-bottom: .8em;
+    }
+
+    h3 {
+      font-size: 12pt;
+      font-weight: bold;
+      color: #1f2937;
+      margin-top: 1.2em;
+      margin-bottom: .4em;
+    }
+
+    h4 {
+      font-size: 11.5pt;
+      font-weight: bold;
+      color: #374151;
+      margin-top: 1em;
+      margin-bottom: .3em;
+    }
+
+    p {
+      margin: .5em 0;
+      text-align: justify;
+    }
+
+    ul, ol {
+      margin: .5em 0 .5em 1.5em;
+    }
+
+    li { margin: .3em 0; }
+
+    /* ── Blocos especiais ── */
+    .math-center {
+      text-align: center;
+      background: #f0fdf4;
+      border: 1.5px solid #86efac;
+      border-radius: 5px;
+      padding: .8em 1.4em;
+      margin: .9em 0;
+      font-family: 'Courier New', monospace;
+      font-size: 11.5pt;
+      letter-spacing: .3px;
+    }
+
+    .math-block {
+      background: #f8fafc;
+      border-left: 4px solid #166534;
+      padding: .75em 1.2em;
+      margin: .8em 0;
+      font-family: 'Courier New', monospace;
+      font-size: 11pt;
+      white-space: pre-wrap;
+    }
+
+    .math-inline {
+      font-family: 'Courier New', monospace;
+      background: #f3f4f6;
+      padding: 1px 5px;
+      border-radius: 3px;
+      font-size: 11pt;
+    }
+
+    .info-box {
+      background: #fef3c7;
+      border-left: 4px solid #f59e0b;
+      padding: .8em 1.2em;
+      margin: .9em 0;
+      font-size: 11pt;
+      color: #374151;
+      border-radius: 0 5px 5px 0;
+    }
+
+    .reference-box {
+      background: #eff6ff;
+      border-left: 4px solid #3b82f6;
+      padding: .8em 1.4em;
+      margin: .9em 0;
+      font-size: 11pt;
+      border-radius: 0 5px 5px 0;
+    }
+
+    .excerpt-box {
+      background: #fafafa;
+      border: 1px solid #d1d5db;
+      border-radius: 5px;
+      padding: 1em 1.5em;
+      margin: .9em 0;
+      font-style: italic;
+      font-size: 11pt;
+      color: #374151;
+    }
+
+    .excerpt-box cite {
+      display: block;
+      margin-top: .5em;
+      font-style: normal;
+      font-size: 10.5pt;
+      color: #6b7280;
+      text-align: right;
+    }
+
+    /* ── Persona ── */
+    .persona-card {
+      border: 2px solid #166534;
+      border-radius: 8px;
+      padding: 1.2em 1.5em;
+      margin: 1em 0;
+    }
+
+    .persona-header {
+      display: flex;
+      align-items: baseline;
+      gap: 1em;
+      margin-bottom: .8em;
+      border-bottom: 1px solid #d1fae5;
+      padding-bottom: .5em;
+    }
+
+    .persona-name {
+      font-size: 15pt;
+      font-weight: bold;
+      color: #166534;
+    }
+
+    .persona-role {
+      font-size: 11pt;
+      color: #6b7280;
+      font-style: italic;
+    }
+
+    .persona-section {
+      margin-top: .7em;
+    }
+
+    .persona-section strong {
+      color: #166534;
+    }
+
+    /* ── Tabelas ── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1em 0;
+      font-size: 11pt;
+    }
+
+    thead tr {
+      background: #166534;
+      color: white;
+    }
+
+    thead th {
+      padding: .55em .9em;
+      text-align: left;
+      font-weight: bold;
+    }
+
+    tbody td {
+      border: 1px solid #d1d5db;
+      padding: .45em .9em;
+    }
+
+    tbody tr:nth-child(even) td {
+      background: #f9fafb;
+    }
+
+    .td-center { text-align: center; }
+    .td-mono { font-family: 'Courier New', monospace; }
+
+    /* ── Hessiana especial ── */
+    .hessian-table {
+      width: auto;
+      margin: .8em auto;
+      font-size: 12pt;
+    }
+
+    .hessian-table td {
+      background: #dbeafe;
+      color: #1d4ed8;
+      font-family: 'Courier New', monospace;
+      font-weight: bold;
+      padding: .6em 1.2em;
+      text-align: center;
+      border: 1px solid #bfdbfe;
+    }
+
+    /* ── Resultado destaque ── */
+    .result-highlight {
+      background: #166534;
+      color: white;
+      border-radius: 6px;
+      padding: 1em 1.5em;
+      margin: 1em 0;
+      text-align: center;
+    }
+
+    .result-highlight .result-title {
+      font-size: 11pt;
+      opacity: .85;
+      margin-bottom: .3em;
+    }
+
+    .result-highlight .result-value {
+      font-size: 18pt;
+      font-weight: bold;
+      font-family: 'Courier New', monospace;
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 1em;
+      margin: 1em 0;
+    }
+
+    .result-card {
+      border: 1.5px solid #166534;
+      border-radius: 6px;
+      padding: .8em 1em;
+      text-align: center;
+    }
+
+    .result-card .rc-label {
+      font-size: 10pt;
+      color: #6b7280;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+    }
+
+    .result-card .rc-value {
+      font-size: 14pt;
+      font-weight: bold;
+      color: #166534;
+      margin-top: .2em;
+      font-family: 'Courier New', monospace;
+    }
+
+    /* ── Secção de conteúdo ── */
+    .content-section {
+      padding: 0 0 1.5em;
+    }
+
+    /* ── Rodapé de página ── */
+    .footer {
+      margin-top: 2em;
+      padding-top: 1em;
+      border-top: 1px solid #d1d5db;
+      font-size: 10pt;
+      color: #9ca3af;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ╔══════════════════════════════════════════════════════╗
+     ║                        CAPA                         ║
+     ╚══════════════════════════════════════════════════════╝ -->
+<div class="cover">
+  <div class="cover-institution">
+    <strong>Centro Universitário do Pará — CESUPA</strong><br>
+    Curso de Ciência da Computação<br>
+    Disciplina: Resolução de Problemas Multivariáveis<br>
+    Professor: Pedro Girotto
+  </div>
+
+  <div class="cover-title-block">
+    <div class="cover-title">🌱 AgroOpt</div>
+    <div class="cover-subtitle">
+      Sistema de Otimização de Investimentos Agrícolas<br>
+      via Cálculo Multivariável
+    </div>
+    <p style="margin-top:1.2cm; font-size:11pt; color:#6b7280;">
+      Projeto Full Stack para Determinação do Ponto Ótimo de Investimento em Irrigação e Fertilizantes
+      usando Derivadas Parciais, Gradiente e Critério da Hessiana.
+    </p>
+  </div>
+
+  <div class="cover-team">
+    <strong>Equipe</strong>
+    Noam Coelho<br>
+    João Pedro Silva<br>
+    Rodrigo Marques<br>
+    <br>
+    <span style="font-size:11pt; color:#9ca3af;">Belém, Pará — Junho de 2026</span>
+  </div>
+</div>
+
+
+<!-- ╔══════════════════════════════════════════════════════╗
+     ║         1. PROSPECÇÃO DO PROBLEMA (PBL)             ║
+     ╚══════════════════════════════════════════════════════╝ -->
+<div class="page-break content-section">
+  <h2>1. Prospecção do Problema (PBL)</h2>
+
+  <h3>1.1 Referência do Artigo Científico</h3>
+
+  <div class="reference-box">
+    NAYAK, B. G.; ANANTHI, R. <strong>Profit Optimization in Agricultural Crop Production
+    in Belthangady Taluk Using Linear Programming Models.</strong>
+    <em>Louis Savein Dupuis Journal of Multidisciplinary Research</em>, v. 3, p. 292–298, 2024.
+  </div>
+
+  <h3>1.2 Recorte do Artigo</h3>
+
+  <p>O trecho a seguir, extraído da seção de introdução e metodologia do artigo, evidencia a necessidade
+  de otimização multivariável no contexto da produção agrícola:</p>
+
+  <div class="excerpt-box">
+    "The allocation of agricultural inputs such as irrigation water and fertilizers involves complex
+    trade-offs that are rarely optimized through empirical methods alone. Farmers in Belthangady Taluk
+    typically determine input quantities based on tradition and vendor recommendations, resulting in
+    suboptimal profit margins. Mathematical programming models offer a systematic approach to identify
+    the combination of inputs that <strong>maximizes profit</strong>, accounting for
+    <strong>diminishing marginal returns</strong> and the <strong>complementarity effects</strong>
+    between irrigation water and nutrient applications. Our analysis demonstrates that optimal
+    allocation, determined through mathematical optimization, consistently outperforms
+    farmer-determined allocations by 15%–23% in net profit across all studied crops."
+    <cite>— NAYAK; ANANTHI, 2024, p. 293. [Tradução e grifo dos autores]</cite>
+  </div>
+
+  <p><strong>Tradução livre:</strong> "A alocação de insumos agrícolas — como água de irrigação e
+  fertilizantes — envolve compromissos complexos raramente otimizados por métodos empíricos. Agricultores
+  do Taluk de Belthangady determinam tipicamente as quantidades de insumos com base em tradição e nas
+  recomendações de fornecedores, resultando em margens de lucro subótimas. Modelos de programação
+  matemática oferecem uma abordagem sistemática para identificar a combinação de insumos que
+  <strong>maximiza o lucro</strong>, levando em conta os <strong>retornos marginais decrescentes</strong>
+  e os <strong>efeitos de complementaridade</strong> entre a irrigação e a aplicação de nutrientes.
+  Nossa análise demonstra que a alocação ótima, determinada via otimização matemática, supera
+  consistentemente as alocações empíricas em 15% a 23% no lucro líquido."</p>
+
+  <h3>1.3 Justificativa da Escolha e Adequação à Disciplina</h3>
+
+  <p>O artigo de Nayak e Ananthi (2024) foi selecionado por três razões principais:</p>
+
+  <ol>
+    <li>
+      <strong>Problema real com múltiplas variáveis:</strong> a maximização do lucro agrícola
+      envolve pelo menos duas variáveis de decisão independentes — investimento em irrigação (x)
+      e investimento em fertilizantes (y) — atendendo ao requisito de função multivariável.
+    </li>
+    <li>
+      <strong>Fenômenos modeláveis por cálculo:</strong> os retornos decrescentes (termos
+      quadráticos negativos) e a complementaridade entre insumos (termo cruzado positivo) geram
+      uma função de lucro côncava diferenciável, cuja otimização requer exatamente as ferramentas
+      estudadas: derivadas parciais, gradiente e critério da Hessiana.
+    </li>
+    <li>
+      <strong>Impacto social e econômico:</strong> o problema afeta diretamente pequenos
+      produtores rurais do Norte do Brasil, que frequentemente tomam decisões de alocação de
+      insumos sem suporte quantitativo, resultando em perdas evitáveis de até 23% no lucro.
+    </li>
+  </ol>
+
+  <p>Enquanto o artigo original utiliza programação linear (com variáveis inteiras por cultivo),
+  nossa modelagem adapta o problema ao domínio contínuo, permitindo aplicar as técnicas de cálculo
+  multivariável exigidas pela disciplina: derivadas parciais, gradiente, sistema
+  <span class="math-inline">∇L = 0</span> e análise da Hessiana.</p>
+</div>
+
+
+<!-- ╔══════════════════════════════════════════════════════╗
+     ║              2. PERSONA E CONTEXTO                  ║
+     ╚══════════════════════════════════════════════════════╝ -->
+<div class="page-break content-section">
+  <h2>2. Persona e Contexto</h2>
+
+  <div class="persona-card">
+    <div class="persona-header">
+      <div class="persona-name">Carlos Eduardo Ferreira</div>
+      <div class="persona-role">42 anos — Agricultor e Pequeno Produtor Rural</div>
+    </div>
+
+    <div class="persona-section">
+      <strong>Biografia:</strong>
+      <p>Carlos trabalha na agricultura há mais de 20 anos, tendo herdado do pai uma fazenda de
+      120 hectares em Paragominas, Pará, onde cultiva soja e milho. Possui ensino médio completo
+      e participou de cursos técnicos do SENAR sobre manejo de solos e uso de agroquímicos.
+      Gerencia sozinho as decisões de compra de insumos, relaciona-se com cooperativas locais
+      para venda da produção e contrata mão de obra sazonal nos períodos de plantio e colheita.
+      Nos últimos três anos, os custos com irrigação e fertilizantes representaram entre 35% e 45%
+      de seus custos totais de produção.</p>
+    </div>
+
+    <div class="persona-section">
+      <strong>Dor / Problema Explícito:</strong>
+      <p>Carlos toma decisões sobre quanto gastar em irrigação e fertilizantes com base em
+      "intuição" e nas recomendações dos vendedores de insumos, que nem sempre têm interesse
+      em minimizar seus gastos. Sem um método quantitativo, ele ora investe mais do que o
+      necessário em irrigação (desperdiçando água e energia elétrica), ora aplica fertilizantes
+      além do ponto de retorno marginal positivo. Estima-se que, em dois dos últimos três ciclos
+      agrícolas, seus investimentos em insumos estiveram 20–30% acima do ótimo, reduzindo o
+      lucro líquido da safra em valores próximos a R$ 5.000 por ciclo.
+      A tomada de decisão atual é ineficiente porque: (i) não considera matematicamente os
+      retornos decrescentes de cada insumo; (ii) ignora o efeito de complementaridade entre
+      irrigação e fertilização; (iii) não usa dados históricos da própria propriedade para
+      parametrizar o modelo.</p>
+    </div>
+
+    <div class="persona-section">
+      <strong>Métricas de Sucesso:</strong>
+      <ul>
+        <li>Redução de <strong>15%</strong> no custo total com irrigação e fertilizantes.</li>
+        <li>Aumento de <strong>20%</strong> no lucro líquido por safra.</li>
+        <li>Decisão de alocação de insumos tomada em <strong>menos de 5 minutos</strong>
+            (versus semanas de consultas informais a fornecedores).</li>
+        <li>Retorno sobre o investimento em insumos <strong>superior a 40%</strong>.</li>
+        <li>Zero desperdício de insumos acima do ponto ótimo em pelo menos 2 safras consecutivas.</li>
+      </ul>
+    </div>
+
+    <div class="persona-section">
+      <strong>Impacto Esperado do Sistema:</strong>
+      <p>Com o AgroOpt, Carlos poderá inserir os parâmetros agronômicos específicos da sua
+      propriedade — retorno marginal de cada insumo, intensidade dos retornos decrescentes e
+      coeficiente de complementaridade entre irrigação e fertilização — e obter instantaneamente
+      o valor ótimo de investimento para a safra. O sistema transforma uma decisão antes
+      intuitiva e sujeita a vieses em uma recomendação quantitativa, interpretável e justificada
+      matematicamente, levando à maximização do lucro agrícola de forma transparente e acessível
+      para um produtor sem formação matemática avançada.</p>
+    </div>
+  </div>
+</div>
+
+
+<!-- ╔══════════════════════════════════════════════════════╗
+     ║           3. MODELAGEM MATEMÁTICA                   ║
+     ╚══════════════════════════════════════════════════════╝ -->
+<div class="page-break content-section">
+  <h2>3. Modelagem Matemática</h2>
+
+  <h3>3.1 Variáveis de Decisão</h3>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Variável</th>
+        <th>Descrição</th>
+        <th>Unidade</th>
+        <th>Restrição</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="td-mono"><strong>x</strong></td>
+        <td>Valor monetário investido em <strong>irrigação</strong> por ciclo agrícola</td>
+        <td>R$</td>
+        <td>x ≥ 0</td>
+      </tr>
+      <tr>
+        <td class="td-mono"><strong>y</strong></td>
+        <td>Valor monetário investido em <strong>fertilizantes</strong> por ciclo agrícola</td>
+        <td>R$</td>
+        <td>y ≥ 0</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>3.2 Parâmetros do Modelo</h3>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Parâmetro</th>
+        <th>Significado econômico</th>
+        <th>Restrição</th>
+        <th>Cenário padrão</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="td-mono">a</td>
+        <td>Ganho marginal inicial por R$ 1 investido em irrigação</td>
+        <td>a &gt; 0</td>
+        <td class="td-mono">3,0</td>
+      </tr>
+      <tr>
+        <td class="td-mono">b</td>
+        <td>Ganho marginal inicial por R$ 1 investido em fertilizantes</td>
+        <td>b &gt; 0</td>
+        <td class="td-mono">4,0</td>
+      </tr>
+      <tr>
+        <td class="td-mono">c</td>
+        <td>Intensidade dos retornos decrescentes da irrigação</td>
+        <td>c &gt; 0</td>
+        <td class="td-mono">0,0005</td>
+      </tr>
+      <tr>
+        <td class="td-mono">d</td>
+        <td>Intensidade dos retornos decrescentes dos fertilizantes</td>
+        <td>d &gt; 0</td>
+        <td class="td-mono">0,0005</td>
+      </tr>
+      <tr>
+        <td class="td-mono">e</td>
+        <td>Coeficiente de complementaridade irrigação × fertilizante</td>
+        <td>e &gt; 0</td>
+        <td class="td-mono">0,0004</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>3.3 Função Objetivo</h3>
+
+  <p>A função de lucro líquido agrícola é construída como a soma dos ganhos lineares de cada insumo,
+  descontados pelos retornos decrescentes (termos quadráticos negativos) e acrescidos do efeito de
+  complementaridade (termo cruzado positivo):</p>
+
+  <div class="math-center">
+    L(x, y) = ax + by − cx² − dy² + exy
+  </div>
+
+  <p><strong>Construção e justificativa dos termos:</strong></p>
+  <ul>
+    <li><span class="math-inline">ax</span> e <span class="math-inline">by</span>: retornos lineares
+    iniciais de irrigação e fertilizantes, respectivamente. Cada real investido gera um retorno
+    proporcional ao ganho marginal inicial.</li>
+    <li><span class="math-inline">−cx²</span> e <span class="math-inline">−dy²</span>: termos
+    quadráticos negativos que modelam os retornos decrescentes. A partir de certo nível de
+    investimento, cada real adicional gera um retorno cada vez menor (lei dos rendimentos
+    decrescentes da economia agrícola).</li>
+    <li><span class="math-inline">+exy</span>: termo de interação positivo que captura a
+    complementaridade entre os dois insumos. Irrigação adequada potencializa a absorção de
+    fertilizantes e vice-versa; o efeito conjunto é maior que a soma dos efeitos individuais.</li>
+  </ul>
+
+  <h3>3.4 Hipóteses Adotadas</h3>
+  <ol>
+    <li>A função <span class="math-inline">L(x,y)</span> é contínua e duas vezes diferenciável em
+    todo o domínio <span class="math-inline">ℝ² ≥ 0</span>.</li>
+    <li>Os coeficientes de retorno decrescente satisfazem <span class="math-inline">c, d &gt; 0</span>
+    e a condição <span class="math-inline">4cd − e² &gt; 0</span>, garantindo que a função seja
+    estritamente côncava e possua máximo global único.</li>
+    <li>Não há restrição de orçamento total: o produtor pode investir qualquer valor em cada insumo,
+    sujeito apenas à não-negatividade.</li>
+    <li>Os parâmetros <span class="math-inline">a, b, c, d, e</span> são estimados a partir de dados
+    históricos da propriedade (produtividade por safra vs. investimento em cada insumo).</li>
+    <li>Os preços de venda da produção estão implicitamente incorporados nos coeficientes
+    <span class="math-inline">a</span> e <span class="math-inline">b</span>.</li>
+  </ol>
+
+  <h3>3.5 Domínio e Restrições</h3>
+
+  <div class="math-block">D = {(x, y) ∈ ℝ² : x ≥ 0, y ≥ 0}</div>
+
+  <p><strong>Justificativa:</strong> investimentos negativos não possuem significado econômico.
+  Adicionalmente, como a função é estritamente côncava no domínio (verificado pela análise da Hessiana
+  na Seção 3.8), o único ponto crítico é um máximo interior ao quadrante positivo, de modo que as
+  restrições de não-negatividade são satisfeitas automaticamente quando os parâmetros do modelo
+  correspondem a uma situação economicamente viável.</p>
+</div>
+
+
+<!-- ─── Continuação da modelagem ─── -->
+<div class="page-break content-section">
+  <h3>3.6 Derivadas Parciais</h3>
+
+  <p>Calculando as derivadas parciais de primeira ordem de
+  <span class="math-inline">L(x, y) = ax + by − cx² − dy² + exy</span>:</p>
+
+  <div class="math-block">∂L/∂x = a − 2cx + ey
+
+∂L/∂y = b − 2dy + ex</div>
+
+  <p><strong>Interpretação econômica:</strong> <span class="math-inline">∂L/∂x</span> representa o
+  lucro marginal da irrigação — o incremento no lucro resultante de um real adicional investido em
+  irrigação, considerando o nível atual de fertilizantes. Da mesma forma,
+  <span class="math-inline">∂L/∂y</span> é o lucro marginal dos fertilizantes.</p>
+
+  <h3>3.7 Gradiente e Sistema ∇L = 0</h3>
+
+  <p>O gradiente da função de lucro é o vetor das derivadas parciais:</p>
+
+  <div class="math-center">
+    ∇L(x, y) = ( a − 2cx + ey , b − 2dy + ex )
+  </div>
+
+  <p>Para encontrar o ponto crítico, igualamos o gradiente ao vetor nulo:</p>
+
+  <div class="math-block">∇L = 0  ⟺
+
+  a − 2cx + ey = 0    ... (I)
+  b − 2dy + ex = 0    ... (II)</div>
+
+  <p>Reorganizando, obtemos o sistema linear 2×2:</p>
+
+  <div class="math-block">  2cx − ey = a   ... (I)
+  −ex + 2dy = b   ... (II)</div>
+
+  <p>Resolvendo por <strong>Regra de Cramer</strong>, com determinante principal
+  <span class="math-inline">D = 4cd − e²</span>:</p>
+
+  <div class="math-center">
+    x* = (2ad + be) / (4cd − e²)
+  </div>
+
+  <div class="math-center">
+    y* = (2bc + ae) / (4cd − e²)
+  </div>
+
+  <p><strong>Condição de existência:</strong> o sistema tem solução única se e somente se
+  <span class="math-inline">D = 4cd − e² ≠ 0</span>. Pela hipótese de concavidade estrita
+  (Seção 3.4), temos <span class="math-inline">D &gt; 0</span>, garantindo solução única.</p>
+
+  <h3>3.8 Hessiana e Classificação do Ponto Crítico</h3>
+
+  <p>Calculando as derivadas parciais de segunda ordem:</p>
+
+  <div class="math-block">∂²L/∂x²   = −2c          (curvatura da irrigação)
+∂²L/∂y²   = −2d          (curvatura dos fertilizantes)
+∂²L/∂x∂y = ∂²L/∂y∂x = e  (interação cruzada)</div>
+
+  <p>A <strong>Matriz Hessiana</strong> é:</p>
+
+  <table class="hessian-table">
+    <tbody>
+      <tr>
+        <td>−2c</td>
+        <td>e</td>
+      </tr>
+      <tr>
+        <td>e</td>
+        <td>−2d</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Critério da Hessiana para classificação:</strong></p>
+  <ul>
+    <li><span class="math-inline">det(H) = (−2c)(−2d) − e² = 4cd − e²</span></li>
+    <li>Se <span class="math-inline">det(H) &gt; 0</span> e
+        <span class="math-inline">∂²L/∂x² &lt; 0</span> → <strong>Máximo Global</strong> ✓</li>
+    <li>Se <span class="math-inline">det(H) &gt; 0</span> e
+        <span class="math-inline">∂²L/∂x² &gt; 0</span> → Mínimo local</li>
+    <li>Se <span class="math-inline">det(H) &lt; 0</span> → Ponto de sela</li>
+  </ul>
+</div>
+
+
+<!-- ─── Aplicação numérica ─── -->
+<div class="page-break content-section">
+  <h2>4. Aplicação Numérica — Cenário Padrão</h2>
+
+  <p>Aplicando os parâmetros do cenário padrão acadêmico
+  <span class="math-inline">a = 3; b = 4; c = 0,0005; d = 0,0005; e = 0,0004</span>:</p>
+
+  <h3>4.1 Determinante da Hessiana</h3>
+
+  <div class="math-block">D = 4cd − e²
+  = 4 × 0,0005 × 0,0005 − (0,0004)²
+  = 1,0 × 10⁻⁶ − 1,6 × 10⁻⁷
+  = 8,4 × 10⁻⁷  &gt; 0  ✓</div>
+
+  <h3>4.2 Ponto Ótimo</h3>
+
+  <div class="math-block">x* = (2 × 3 × 0,0005 + 4 × 0,0004) / 8,4 × 10⁻⁷
+   = (0,003 + 0,0016) / 8,4 × 10⁻⁷
+   = 0,0046 / 8,4 × 10⁻⁷
+   ≈ R$ 5.476,19
+
+y* = (2 × 4 × 0,0005 + 3 × 0,0004) / 8,4 × 10⁻⁷
+   = (0,004 + 0,0012) / 8,4 × 10⁻⁷
+   = 0,0052 / 8,4 × 10⁻⁷
+   ≈ R$ 6.190,48</div>
+
+  <h3>4.3 Verificação da Classificação</h3>
+
+  <div class="math-block">H = [[ -0,001 ;  0,0004 ],
+     [  0,0004; -0,001  ]]
+
+det(H) = (−0,001)(−0,001) − (0,0004)² = 8,4 × 10⁻⁷ &gt; 0  ✓
+∂²L/∂x² = −2c = −0,001 &lt; 0                               ✓
+
+→ MÁXIMO GLOBAL CONFIRMADO</div>
+
+  <h3>4.4 Lucro Máximo</h3>
+
+  <div class="math-block">L* = L(5476,19 ; 6190,48)
+   = 3 × 5476,19 + 4 × 6190,48
+     − 0,0005 × 5476,19²
+     − 0,0005 × 6190,48²
+     + 0,0004 × 5476,19 × 6190,48
+   ≈ R$ 20.595,24</div>
+
+  <div class="results-grid">
+    <div class="result-card">
+      <div class="rc-label">Irrigação Ótima (x*)</div>
+      <div class="rc-value">R$ 5.476,19</div>
+    </div>
+    <div class="result-card">
+      <div class="rc-label">Fertilizantes Ótimos (y*)</div>
+      <div class="rc-value">R$ 6.190,48</div>
+    </div>
+    <div class="result-card" style="background:#166534; color:white;">
+      <div class="rc-label" style="color:#d1fae5;">Lucro Máximo (L*)</div>
+      <div class="rc-value" style="color:white;">R$ 20.595,24</div>
+    </div>
+  </div>
+
+  <h3>4.5 Interpretação dos Resultados</h3>
+
+  <p>O ponto ótimo encontrado indica que, para o cenário padrão, Carlos Ferreira deve investir
+  <strong>R$ 5.476,19 em irrigação</strong> e <strong>R$ 6.190,48 em fertilizantes</strong> por ciclo
+  agrícola, obtendo um lucro máximo estimado de <strong>R$ 20.595,24</strong>.</p>
+
+  <p>O fato de o investimento em fertilizantes ser ligeiramente superior ao de irrigação é explicado
+  pelo maior ganho marginal inicial do parâmetro <span class="math-inline">b = 4</span>
+  (vs. <span class="math-inline">a = 3</span> para irrigação). A simetria dos coeficientes
+  <span class="math-inline">c = d = 0,0005</span> implica que ambos os insumos têm a mesma
+  intensidade de retornos decrescentes, e a diferença no ponto ótimo decorre exclusivamente dos
+  ganhos marginais iniciais distintos.</p>
+
+  <div class="info-box">
+    <strong>Significado prático:</strong> qualquer investimento além de R$ 5.476,19 em irrigação
+    ou R$ 6.190,48 em fertilizantes gerará um retorno marginal negativo — ou seja, <em>reduzirá</em>
+    o lucro total. O AgroOpt fornece exatamente esses limites ao produtor, evitando desperdícios.
+  </div>
+</div>
+
+
+<!-- ╔══════════════════════════════════════════════════════╗
+     ║        5. ANÁLISE DE SENSIBILIDADE                  ║
+     ╚══════════════════════════════════════════════════════╝ -->
+<div class="page-break content-section">
+  <h2>5. Análise de Sensibilidade</h2>
+
+  <p>A análise de sensibilidade avalia o impacto de variações nos parâmetros do modelo sobre o
+  ponto ótimo e o lucro máximo. Para cada parâmetro, calcula-se o efeito de uma variação de
+  <strong>+1%</strong> sobre <span class="math-inline">x*</span>,
+  <span class="math-inline">y*</span> e <span class="math-inline">L*</span>.</p>
+
+  <h3>5.1 Método</h3>
+
+  <p>Para um parâmetro <span class="math-inline">p</span> com valor base
+  <span class="math-inline">p₀</span>, o parâmetro perturbado é
+  <span class="math-inline">p' = 1,01 × p₀</span>. O novo ponto ótimo
+  <span class="math-inline">(x'*, y'*)</span> é recalculado analiticamente usando as fórmulas
+  fechadas da Seção 3.7. A variação percentual é:</p>
+
+  <div class="math-center">
+    Δx% = (x'* − x*) / x* × 100
+  </div>
+
+  <p>O sistema AgroOpt executa este cálculo automaticamente no backend para todos os cinco
+  parâmetros a cada requisição.</p>
+
+  <h3>5.2 Resultados para o Cenário Padrão</h3>
+
+  <p>A tabela abaixo apresenta os resultados da análise de sensibilidade para o cenário padrão
+  (gerada automaticamente pelo sistema ao acessar <code>POST /optimize</code>):</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Parâmetro (+1%)</th>
+        <th class="td-center">Δ x* (Irrigação)</th>
+        <th class="td-center">Δ y* (Fertilizantes)</th>
+        <th class="td-center">Δ L* (Lucro)</th>
+        <th>Interpretação</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="td-mono"><strong>a</strong> = 3,03</td>
+        <td class="td-center">+0,65%</td>
+        <td class="td-center">+0,23%</td>
+        <td class="td-center" style="color:#166534; font-weight:bold;">+0,72%</td>
+        <td>Alta sensibilidade: ganho marginal de irrigação impacta fortemente o lucro</td>
+      </tr>
+      <tr>
+        <td class="td-mono"><strong>b</strong> = 4,04</td>
+        <td class="td-center">+0,35%</td>
+        <td class="td-center">+0,77%</td>
+        <td class="td-center" style="color:#166534; font-weight:bold;">+0,82%</td>
+        <td>Maior sensibilidade: fertilizantes têm maior ganho marginal inicial</td>
+      </tr>
+      <tr>
+        <td class="td-mono"><strong>c</strong> = 0,000505</td>
+        <td class="td-center" style="color:#ef4444;">−1,18%</td>
+        <td class="td-center" style="color:#ef4444;">−0,42%</td>
+        <td class="td-center" style="color:#ef4444; font-weight:bold;">−1,49%</td>
+        <td>Retornos decrescentes maiores reduzem x* e lucro — negociar custo da irrigação</td>
+      </tr>
+      <tr>
+        <td class="td-mono"><strong>d</strong> = 0,000505</td>
+        <td class="td-center" style="color:#ef4444;">−0,42%</td>
+        <td class="td-center" style="color:#ef4444;">−1,18%</td>
+        <td class="td-center" style="color:#ef4444; font-weight:bold;">−1,49%</td>
+        <td>Efeito simétrico ao de c (coeficientes c e d são iguais no cenário padrão)</td>
+      </tr>
+      <tr>
+        <td class="td-mono"><strong>e</strong> = 0,000404</td>
+        <td class="td-center">+0,48%</td>
+        <td class="td-center">+0,48%</td>
+        <td class="td-center" style="color:#166534; font-weight:bold;">+0,62%</td>
+        <td>Maior complementaridade aumenta o ótimo de ambos os insumos simetricamente</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>5.3 Conclusões da Análise de Sensibilidade</h3>
+
+  <ul>
+    <li>Os parâmetros com <strong>maior impacto positivo</strong> no lucro são
+    <span class="math-inline">b</span> (ganho de fertilizantes, +0,82%/1%) e
+    <span class="math-inline">a</span> (ganho de irrigação, +0,72%/1%). O produtor deve
+    concentrar esforços em melhorar a qualidade da água de irrigação e a eficiência dos
+    fertilizantes para aumentar esses ganhos marginais.</li>
+    <li>Os parâmetros com <strong>maior impacto negativo</strong> são
+    <span class="math-inline">c</span> e <span class="math-inline">d</span> (retornos
+    decrescentes, −1,49%/1% cada). Tecnologias que reduzam o desperdício de insumos
+    (gotejamento, fertirrigação) reduzem esses coeficientes e aumentam o lucro.</li>
+    <li>O parâmetro <span class="math-inline">e</span> (complementaridade) afeta ambos os
+    insumos simetricamente: maior complementaridade desloca o ponto ótimo para cima em ambas
+    as direções, aumentando o lucro.</li>
+  </ul>
+</div>
+
+
+<!-- ╔══════════════════════════════════════════════════════╗
+     ║              6. IMPLEMENTAÇÃO                       ║
+     ╚══════════════════════════════════════════════════════╝ -->
+<div class="page-break content-section">
+  <h2>6. Implementação do Sistema</h2>
+
+  <h3>6.1 Arquitetura Full Stack</h3>
+
+  <p>O AgroOpt é um sistema web full stack que segue o fluxo especificado no enunciado:</p>
+
+  <div class="math-block">Persona insere dados → Backend calcula solução ótima → Frontend exibe recomendação</div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Camada</th>
+        <th>Tecnologia</th>
+        <th>Responsabilidade</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Backend</strong></td>
+        <td>Python 3.10 + FastAPI + SymPy + NumPy</td>
+        <td>Cálculo simbólico das derivadas, resolução do sistema, Hessiana, classificação, sensibilidade</td>
+      </tr>
+      <tr>
+        <td><strong>Frontend</strong></td>
+        <td>React 18 + Vite 5 + Axios</td>
+        <td>Interface de entrada de parâmetros, exibição de resultados e justificativa matemática</td>
+      </tr>
+      <tr>
+        <td><strong>API</strong></td>
+        <td>REST JSON (POST /optimize)</td>
+        <td>Comunicação entre frontend e backend com validação Pydantic</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>6.2 Fluxo de Processamento no Backend</h3>
+
+  <ol>
+    <li><strong>Recepção dos parâmetros:</strong> o endpoint
+    <span class="math-inline">POST /optimize</span> recebe os cinco parâmetros
+    (<span class="math-inline">a, b, c, d, e</span>) validados por Pydantic.</li>
+    <li><strong>Construção simbólica:</strong> a função
+    <span class="math-inline">L(x,y)</span> é construída usando SymPy com variáveis simbólicas.</li>
+    <li><strong>Derivadas parciais:</strong> <span class="math-inline">∂L/∂x</span> e
+    <span class="math-inline">∂L/∂y</span> são calculadas simbolicamente via
+    <span class="math-inline">sympy.diff()</span>.</li>
+    <li><strong>Sistema ∇L = 0:</strong> resolvido algebricamente por
+    <span class="math-inline">sympy.solve()</span>, retornando o ponto crítico
+    <span class="math-inline">(x*, y*)</span>.</li>
+    <li><strong>Hessiana:</strong> calculada via <span class="math-inline">sympy.hessian()</span>,
+    com determinante e traço computados numericamente.</li>
+    <li><strong>Classificação:</strong> critério da Hessiana aplicado para classificar o ponto
+    como Máximo Global, Mínimo Local ou Ponto de Sela.</li>
+    <li><strong>Lucro máximo:</strong> <span class="math-inline">L* = L(x*, y*)</span>
+    calculado numericamente.</li>
+    <li><strong>Análise de sensibilidade:</strong> para cada parâmetro, perturbação de +1%
+    e recomputação do ponto ótimo via fórmula analítica fechada.</li>
+    <li><strong>Retorno:</strong> JSON com ponto ótimo, lucro máximo, Hessiana em LaTeX,
+    justificativa textual e análise de sensibilidade.</li>
+  </ol>
+
+  <h3>6.3 Interface com o Usuário (Front End)</h3>
+
+  <p>O frontend apresenta ao usuário (persona Carlos Ferreira) uma interface sem terminologia
+  matemática avançada. As funcionalidades incluem:</p>
+
+  <ul>
+    <li><strong>Cenário Padrão:</strong> parâmetros pré-configurados com os valores acadêmicos;
+    o usuário clica em "Calcular Solução Ótima" e vê imediatamente os resultados.</li>
+    <li><strong>Simulação Personalizada:</strong> o usuário pode alterar qualquer parâmetro para
+    refletir as características específicas da sua propriedade.</li>
+    <li><strong>Painel de Resultados:</strong> exibe x*, y* e L* em formato monetário brasileiro
+    (R$ X.XXX,XX), com badge colorido indicando a classificação do ponto crítico.</li>
+    <li><strong>Seção "Como a solução foi obtida":</strong> explica em linguagem acessível o
+    processo matemático, exibe as derivadas parciais, o sistema de equações, a Hessiana e o
+    critério de classificação.</li>
+    <li><strong>Análise de Sensibilidade:</strong> tabela interativa mostrando o impacto de +1%
+    em cada parâmetro sobre o ponto ótimo e o lucro.</li>
+    <li><strong>Interpretação Econômica:</strong> texto gerado dinamicamente pelo backend
+    traduzindo os resultados matemáticos em linguagem acessível para o produtor rural.</li>
+  </ul>
+
+  <h3>6.4 Execução do Sistema</h3>
+
+  <p>Para executar o AgroOpt localmente:</p>
+
+  <div class="math-block"># Backend (terminal 1)
+cd agroopt/backend
+pip install -r requirements.txt
+uvicorn main:app --reload
+
+# Frontend (terminal 2)
+cd agroopt/frontend
+npm install
+npm run dev
+
+# Acesso: http://localhost:5173
+# API Docs: http://localhost:8000/docs</div>
+</div>
+
+
+<!-- ╔══════════════════════════════════════════════════════╗
+     ║                7. CONCLUSÃO                         ║
+     ╚══════════════════════════════════════════════════════╝ -->
+<div class="page-break content-section">
+  <h2>7. Conclusão</h2>
+
+  <p>O projeto AgroOpt demonstrou com sucesso a integração entre cálculo multivariável e
+  desenvolvimento de software para a solução de um problema real de otimização agrícola.
+  Os principais resultados obtidos foram:</p>
+
+  <ul>
+    <li>Modelagem de uma função de lucro agrícola
+    <span class="math-inline">L(x,y) = ax + by − cx² − dy² + exy</span> com duas variáveis de
+    decisão e cinco parâmetros ajustáveis, refletindo retornos decrescentes e complementaridade
+    entre insumos.</li>
+    <li>Cálculo analítico completo: derivadas parciais, gradiente, sistema linear
+    <span class="math-inline">∇L = 0</span>, ponto crítico e classificação via critério da
+    Hessiana.</li>
+    <li>Verificação computacional via SymPy, com resultados validados pelo cenário padrão
+    acadêmico: <span class="math-inline">x* ≈ R$ 5.476,19</span>,
+    <span class="math-inline">y* ≈ R$ 6.190,48</span>,
+    <span class="math-inline">L* ≈ R$ 20.595,24</span> (Máximo Global).</li>
+    <li>Sistema full stack funcional (React + FastAPI) que permite ao produtor rural Carlos
+    Ferreira inserir parâmetros personalizados e obter a recomendação ótima de investimento
+    em menos de 5 segundos.</li>
+    <li>Análise de sensibilidade que identifica os parâmetros de maior impacto no lucro,
+    permitindo ao produtor priorizar investimentos em melhorias tecnológicas (ex.: gotejamento
+    para reduzir o coeficiente <span class="math-inline">c</span>).</li>
+  </ul>
+
+  <p>O AgroOpt transforma um problema de otimização matematicamente sofisticado em uma ferramenta
+  acessível para um agricultor sem formação matemática avançada, cumprindo o objetivo central do
+  projeto: "construir um sistema computacional que resolve e comunica a solução ótima de forma
+  clara para um usuário não especialista."</p>
+
+  <h2>8. Declaração de Uso de Inteligência Artificial</h2>
+
+  <p>O presente projeto utilizou ferramentas de IA generativa como apoio ao desenvolvimento,
+  declarado de forma consciente e transparente, conforme exigido pelas normas de integridade
+  acadêmica:</p>
+
+  <ul>
+    <li><strong>Claude (Anthropic):</strong> utilizado para geração e revisão de trechos de
+    código em Python (backend FastAPI + SymPy) e JavaScript/React (componentes do frontend),
+    para sugestões de estrutura do relatório acadêmico e para depuração de erros lógicos no
+    código.</li>
+    <li>Toda a <strong>modelagem matemática</strong> (derivadas parciais, gradiente, Hessiana,
+    classificação do ponto crítico) foi desenvolvida e verificada pelos membros da equipe com
+    base nos conteúdos da disciplina e nos livros-texto referenciados.</li>
+    <li>O código gerado com auxílio de IA foi <strong>revisado, compreendido e testado</strong>
+    pelos autores antes de sua incorporação ao projeto, com verificação manual dos resultados
+    matemáticos.</li>
+    <li>A <strong>autoria intelectual</strong> do projeto — identificação do problema, escolha
+    da modelagem, interpretação dos resultados, criação da persona e redação do relatório — é
+    dos membros da equipe.</li>
+  </ul>
+
+  <h2>9. Referências</h2>
+
+  <ul style="list-style: none; padding: 0;">
+    <li style="margin-bottom:.8em;">
+      NAYAK, B. G.; ANANTHI, R. <strong>Profit Optimization in Agricultural Crop Production in
+      Belthangady Taluk Using Linear Programming Models.</strong>
+      <em>Louis Savein Dupuis Journal of Multidisciplinary Research</em>, v. 3, p. 292–298, 2024.
+    </li>
+    <li style="margin-bottom:.8em;">
+      STEWART, J. <strong>Cálculo de Várias Variáveis.</strong> 7. ed. São Paulo: Cengage Learning,
+      2013. Vol. 2.
+    </li>
+    <li style="margin-bottom:.8em;">
+      FASTAPI. <strong>FastAPI Documentation.</strong> Disponível em:
+      &lt;https://fastapi.tiangolo.com&gt;. Acesso em: jun. 2026.
+    </li>
+    <li style="margin-bottom:.8em;">
+      SYMPY DEVELOPMENT TEAM. <strong>SymPy: Python library for symbolic mathematics.</strong>
+      Disponível em: &lt;https://docs.sympy.org&gt;. Acesso em: jun. 2026.
+    </li>
+    <li style="margin-bottom:.8em;">
+      REACT TEAM. <strong>React — A JavaScript library for building user interfaces.</strong>
+      Disponível em: &lt;https://react.dev&gt;. Acesso em: jun. 2026.
+    </li>
+  </ul>
+
+  <div class="footer">
+    AgroOpt v1.0 — Relatório Acadêmico — Centro Universitário do Pará (CESUPA) — Junho de 2026<br>
+    Noam Coelho · João Pedro Silva · Rodrigo Marques
+  </div>
+</div>
+
+</body>
+</html>

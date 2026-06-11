@@ -1,7 +1,7 @@
 """
 AgroOpt - Backend FastAPI
 Otimização de investimentos agrícolas via cálculo multivariável.
-Função de lucro: L(x,y) = ax + by - cx² - dy² + exy - x - y
+Função de lucro: L(x,y) = ax + by - cx² - dy² + exy
 """
 
 from fastapi import FastAPI, HTTPException
@@ -51,6 +51,40 @@ class OptimizationOutput(BaseModel):
     sistema_solucao: dict
     explicacao: str
     interpretacao_economica: str
+    sensibilidade: dict
+
+
+def compute_sensitivity(a, b, c, d, e, x_opt, y_opt, lucro_max):
+    """Análise de sensibilidade: variação de +1% em cada parâmetro → impacto percentual no ótimo."""
+    delta = 0.01
+    base = {'a': a, 'b': b, 'c': c, 'd': d, 'e': e}
+    sensitivity = {}
+
+    for pname, pval in base.items():
+        if pval == 0:
+            sensitivity[pname] = {'variacao_x': 0.0, 'variacao_y': 0.0, 'variacao_lucro': 0.0}
+            continue
+
+        perturbed = dict(base)
+        perturbed[pname] = pval * (1 + delta)
+        ap, bp, cp, dp, ep = perturbed['a'], perturbed['b'], perturbed['c'], perturbed['d'], perturbed['e']
+
+        Dp = 4 * cp * dp - ep ** 2
+        if abs(Dp) < 1e-15:
+            continue
+
+        # Solução analítica: x* = (2ad + be)/D, y* = (2bc + ae)/D
+        xp = (2 * ap * dp + bp * ep) / Dp
+        yp = (2 * bp * cp + ap * ep) / Dp
+        Lp = ap * xp + bp * yp - cp * xp ** 2 - dp * yp ** 2 + ep * xp * yp
+
+        sensitivity[pname] = {
+            'variacao_x':     round((xp - x_opt)     / x_opt     * 100, 2) if x_opt     != 0 else 0.0,
+            'variacao_y':     round((yp - y_opt)     / y_opt     * 100, 2) if y_opt     != 0 else 0.0,
+            'variacao_lucro': round((Lp - lucro_max) / lucro_max * 100, 2) if lucro_max != 0 else 0.0,
+        }
+
+    return sensitivity
 
 
 @app.get("/")
@@ -132,6 +166,9 @@ def optimize(params: OptimizationInput):
         f"O lucro máximo alcançável é L* = R$ {lucro_max:,.2f}."
     )
 
+    # ─── 10. Análise de sensibilidade ───────────────────────────────────────
+    sens = compute_sensitivity(a, b, c, d, e, x_opt, y_opt, lucro_max)
+
     interpretacao_economica = (
         f"Para maximizar o lucro agrícola com os parâmetros fornecidos, "
         f"recomenda-se investir R$ {x_opt:,.2f} em irrigação e R$ {y_opt:,.2f} em fertilizantes. "
@@ -156,4 +193,5 @@ def optimize(params: OptimizationInput):
         sistema_solucao={"x": round(x_opt, 4), "y": round(y_opt, 4)},
         explicacao=explicacao,
         interpretacao_economica=interpretacao_economica,
+        sensibilidade=sens,
     )
